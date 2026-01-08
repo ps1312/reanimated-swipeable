@@ -17,17 +17,16 @@ const SNAP_OPEN = SCREEN_WIDTH * 0.3
 export default function App() {
   const isPressed = useSharedValue(false)
   const translateX = useSharedValue(0)
+  const lastPosition = useSharedValue(0)
 
   const gesture = Gesture.Pan()
     .onUpdate((e) => {
-      translateX.value = e.translationX
+      translateX.value = e.translationX + lastPosition.value
     })
-    .onFinalize(() => {
-      if (translateX.value < -SNAP_OPEN) {
-        translateX.value = withSpring(-SNAP_OPEN)
-      } else {
-        translateX.value = withSpring(0)
-      }
+    .onEnd(() => {
+      const endPosition = translateX.value < -SNAP_OPEN ? -SNAP_OPEN : 0
+      translateX.value = withSpring(endPosition)
+      lastPosition.value = endPosition
     })
 
   const animatedStyles = useAnimatedStyle(() => {
@@ -57,7 +56,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   ball: {
     width: '100%',
     height: 100,
