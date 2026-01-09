@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
