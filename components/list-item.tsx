@@ -15,10 +15,14 @@ const ListItem = () => {
   const lastPosition = useSharedValue(0)
 
   const gesture = Gesture.Pan()
+    .onStart(() => {
+      isPressed.value = true
+    })
     .onUpdate((e) => {
       translateX.value = e.translationX + lastPosition.value
     })
     .onEnd(() => {
+      isPressed.value = false
       const endPosition = translateX.value < -SNAP_OPEN ? -SNAP_OPEN : 0
       translateX.value = withSpring(endPosition)
       lastPosition.value = endPosition
