@@ -23,6 +23,7 @@ const ListItem = () => {
       translateX.value = withSpring(endPosition)
       lastPosition.value = endPosition
     })
+    .activeOffsetX([-20, 20])
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
