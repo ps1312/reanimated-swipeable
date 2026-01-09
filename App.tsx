@@ -1,51 +1,23 @@
 import { StatusBar } from 'expo-status-bar'
-import { Dimensions, StyleSheet, View } from 'react-native'
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated'
+import { FlatList, StyleSheet } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
-const SCREEN_WIDTH = Dimensions.get('screen').width
-const SNAP_OPEN = SCREEN_WIDTH * 0.3
+import ListItem from './components/list-item'
+
+const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 export default function App() {
-  const isPressed = useSharedValue(false)
-  const translateX = useSharedValue(0)
-  const lastPosition = useSharedValue(0)
-
-  const gesture = Gesture.Pan()
-    .onUpdate((e) => {
-      translateX.value = e.translationX + lastPosition.value
-    })
-    .onEnd(() => {
-      const endPosition = translateX.value < -SNAP_OPEN ? -SNAP_OPEN : 0
-      translateX.value = withSpring(endPosition)
-      lastPosition.value = endPosition
-    })
-
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: translateX.value }],
-      backgroundColor: isPressed.value ? 'gray' : 'lightgray',
-    }
-  })
-
   return (
-    <GestureHandlerRootView>
-      <StatusBar style="auto" />
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
 
-      <View style={styles.container}>
-        <GestureDetector gesture={gesture}>
-          <Animated.View style={[styles.ball, animatedStyles]} />
-        </GestureDetector>
-      </View>
-    </GestureHandlerRootView>
+        <GestureHandlerRootView>
+          <FlatList data={data} renderItem={() => <ListItem />} />
+        </GestureHandlerRootView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
 
@@ -53,14 +25,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ball: {
-    width: '100%',
-    height: 100,
-    borderRadius: 16,
-    backgroundColor: 'blue',
-    alignSelf: 'center',
   },
 })
